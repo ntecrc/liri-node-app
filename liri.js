@@ -19,27 +19,42 @@ var request = require("request");
 // and when they were created at in your terminal/bash windo
 var Twitter = require('twitter');
 var client = new Twitter(keys.twitter);
-
+//dev62437207
 var input = process.argv[2];
+var userName = process.argv[3];
 
-switch (input) {
-	case 'myTweet':
-		myTweets();
-	break;
+if (input === "myTweets") {
+	console.log(myTweets());
+} else if (input === "movie") {
+	console.log(myMovies());
 }
+
+
+
 	function myTweets(){
-			var params = { screen_name: 'dev62437207' };
+			var params = { screen_name: userName };
 			client.get('statuses/user_timeline', params, function (error, tweets, response) {
-				if (!error) {
-					console.log(tweets.created_at);
-					console.log(tweets.text);
+				if (error) {
+					return console.log(error);
+
+				} else if (!error) {
+					for (i = 0; i < tweets.length; i++) {
+						var counter = i + 1;
+						console.log("---------------------------------------------------");
+						console.log("Tweet #" + counter);
+						console.log(tweets[i].created_at);
+						console.log(tweets[i].text);
+						console.log("---------------------------------------------------");
+					}
 				}
 			});
 	
 		}
 
-// request("http://www.omdbapi.com/?i=tt3896198&apikey=e49dacd7", function(error, response, body) {
-//     if (!error && response.statusCode === 200) {
-//         console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
-//     }
-// });
+function myMovies () {
+	request("http://www.omdbapi.com/?i=tt3896198&apikey=e49dacd7", function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+        console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
+    }
+});
+}
